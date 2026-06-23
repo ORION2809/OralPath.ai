@@ -1,0 +1,14 @@
+{
+  "source": "Microscope_analyzing_tissue_on_s…_202606231644.mp4",
+  "format": "webp",
+  "width": 1280,
+  "height": 720,
+  "fps": 24,
+  "durationSeconds": 8,
+  "frameCount": 192,
+  "namingPattern": "frame_%04d.webp",
+  "firstFrame": "frame_0001.webp",
+  "lastFrame": "frame_0192.webp",
+  "quality": 90,
+  "scaling": "lanczos"
+}

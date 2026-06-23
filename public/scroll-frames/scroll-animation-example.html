@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scroll-Driven WebP Animation</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+    }
+    .spacer {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+    .spacer h1 { font-size: clamp(2rem, 5vw, 4rem); font-weight: 300; }
+    .spacer p { opacity: 0.7; margin-top: 1rem; }
+    .canvas-wrapper {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      overflow: hidden;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .scroll-track {
+      height: 600vh; /* Adjust to control scroll distance */
+    }
+    #loading {
+      position: absolute;
+      z-index: 10;
+      color: rgba(255,255,255,0.8);
+      font-size: 1.2rem;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="spacer">
+    <div>
+      <h1>Scroll to Explore</h1>
+      <p>The microscope sequence plays forward as you scroll down the page.</p>
+    </div>
+  </section>
+
+  <div class="scroll-track">
+    <div class="canvas-wrapper">
+      <div id="loading">Loading frames…</div>
+      <canvas id="scroll-canvas" width="1280" height="720"></canvas>
+    </div>
+  </div>
+
+  <section class="spacer">
+    <div>
+      <h1>Sequence Complete</h1>
+      <p>All 192 frames rendered from the source video.</p>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const canvas = document.getElementById('scroll-canvas');
+      const ctx = canvas.getContext('2d');
+      const loadingEl = document.getElementById('loading');
+      const frameCount = 192;
+      const frames = [];
+      let loadedCount = 0;
+      let isReady = false;
+
+      // Build frame URLs
+      const frameUrls = Array.from({ length: frameCount }, (_, i) =>
+        `frame_${String(i + 1).padStart(4, '0')}.webp`
+      );
+
+      // Load frames
+      frameUrls.forEach((src, index) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+          loadedCount++;
+          if (loadedCount === frameCount) {
+            isReady = true;
+            loadingEl.style.display = 'none';
+            updateFrame();
+          }
+        };
+        img.onerror = () => {
+          console.error('Failed to load frame:', src);
+        };
+        frames[index] = img;
+      });
+
+      function getFrameIndex() {
+        const track = document.querySelector('.scroll-track');
+        const rect = track.getBoundingClientRect();
+        const trackHeight = track.offsetHeight;
+        const viewportHeight = window.innerHeight;
+
+        // Progress from 0 (top of track enters viewport) to 1 (bottom of track leaves viewport)
+        const start = viewportHeight;
+        const end = -(trackHeight - viewportHeight);
+        const distance = start - end;
+        const current = start - rect.top;
+        const progress = Math.min(Math.max(current / distance, 0), 1);
+
+        return Math.floor(progress * (frameCount - 1));
+      }
+
+      function updateFrame() {
+        if (!isReady) return;
+        const index = getFrameIndex();
+        const img = frames[index];
+        if (img && img.complete && img.naturalWidth) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        }
+      }
+
+      // Throttle to animation frame
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            updateFrame();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+
+      window.addEventListener('resize', updateFrame);
+    })();
+  </script>
+</body>
+</html>
