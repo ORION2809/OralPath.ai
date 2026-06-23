@@ -10,7 +10,8 @@ import { ChevronDown } from "lucide-react";
 gsap.registerPlugin(ScrollTrigger);
 
 const FRAME_COUNT = 192;
-const FRAME_PATH = "scroll-frames/frame_%04d.webp";
+const BASE_PATH = "/OralPath.ai";
+const FRAME_PATH = `${BASE_PATH}/scroll-frames/frame_%04d.webp`;
 
 function getFrameUrl(index: number) {
   return FRAME_PATH.replace("%04d", String(index + 1).padStart(4, "0"));
