@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,26 +18,30 @@ function getFrameUrl(index: number) {
 
 const scenes = [
   {
-    start: 0.05,
-    end: 0.2,
+    start: 0,
+    end: 0.22,
+    eyebrow: "01 / Introduction",
     title: "Oral Histopathology.",
     subtitle: "Reimagined with AI.",
   },
   {
-    start: 0.2,
-    end: 0.4,
+    start: 0.22,
+    end: 0.45,
+    eyebrow: "02 / Capture",
     title: "Capture any microscope field.",
     subtitle: "In seconds.",
   },
   {
-    start: 0.4,
-    end: 0.6,
+    start: 0.45,
+    end: 0.68,
+    eyebrow: "03 / Analysis",
     title: "Analyze microscopic tissue architecture.",
     subtitle: "Not just images.",
   },
   {
-    start: 0.6,
-    end: 0.8,
+    start: 0.68,
+    end: 0.88,
+    eyebrow: "04 / Results",
     title: "From slide to diagnosis support.",
     subtitle: "In under a minute.",
   },
@@ -44,12 +49,12 @@ const scenes = [
 
 export function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(0);
   const [allLoaded, setAllLoaded] = useState(false);
   const framesRef = useRef<HTMLImageElement[]>([]);
   const triggerRef = useRef<ScrollTrigger | null>(null);
+  const textContainerRef = useRef<HTMLDivElement>(null);
 
   // Preload frames
   useEffect(() => {
@@ -79,11 +84,13 @@ export function Hero() {
     framesRef.current = frames;
   }, []);
 
-  // GSAP ScrollTrigger for frame scrubbing
+  // GSAP ScrollTrigger for frame scrubbing and text scenes
   useEffect(() => {
-    if (!allLoaded || !canvasRef.current || !trackRef.current) return;
-
     const canvas = canvasRef.current;
+    const track = trackRef.current;
+    const textContainer = textContainerRef.current;
+    if (!allLoaded || !canvas || !track || !textContainer) return;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -103,7 +110,6 @@ export function Hero() {
       }
     };
 
-    // Draw first frame immediately
     drawFrame(0);
 
     if (prefersReducedMotion) {
@@ -111,41 +117,111 @@ export function Hero() {
     }
 
     triggerRef.current = ScrollTrigger.create({
-      trigger: trackRef.current,
+      trigger: track,
       start: "top top",
       end: "bottom bottom",
-      scrub: 0.5,
+      scrub: 0.8,
       onUpdate: (self) => {
         drawFrame(self.progress);
       },
     });
 
+    // Animate scenes
+    const scenes = textContainer.querySelectorAll("[data-scene]");
+    scenes.forEach((scene, index) => {
+      const isLast = index === scenes.length - 1;
+      const start = parseFloat(scene.getAttribute("data-start") || "0");
+      const end = parseFloat(scene.getAttribute("data-end") || "1");
+
+      if (index === 0) {
+        // First scene is already visible on load; only animate it out
+        gsap.set(scene, { opacity: 1, y: 0, scale: 1 });
+      } else {
+        gsap.fromTo(
+          scene,
+          { opacity: 0, y: 40, scale: 0.98 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: track,
+              start: `${start * 100}% top`,
+              end: `${Math.min(start + 0.06, end) * 100}% top`,
+              scrub: true,
+            },
+          }
+        );
+      }
+
+      if (!isLast) {
+        gsap.to(scene, {
+          opacity: 0,
+          y: -40,
+          scale: 0.98,
+          ease: "none",
+          scrollTrigger: {
+            trigger: trackRef.current,
+            start: `${Math.max(end - 0.06, start) * 100}% top`,
+            end: `${end * 100}% top`,
+            scrub: true,
+          },
+        });
+      }
+    });
+
+    // Scroll hint fade out
+    const scrollHint = textContainer.querySelector("[data-scroll-hint]");
+    if (scrollHint) {
+      gsap.to(scrollHint, {
+        opacity: 0,
+        y: 20,
+        ease: "none",
+        scrollTrigger: {
+          trigger: trackRef.current,
+          start: "2% top",
+          end: "8% top",
+          scrub: true,
+        },
+      });
+    }
+
     return () => {
       triggerRef.current?.kill();
+      ScrollTrigger.getAll().forEach((t) => {
+        if (t.trigger === track) t.kill();
+      });
     };
   }, [allLoaded]);
 
   const loadingProgress = Math.round((loaded / FRAME_COUNT) * 100);
 
   return (
-    <section ref={containerRef} className="relative">
+    <section className="relative">
       {/* Sticky canvas */}
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-background">
         <canvas
           ref={canvasRef}
           width={1280}
           height={720}
-          className="absolute inset-0 h-full w-full object-contain"
+          className="absolute inset-0 h-full w-full object-cover"
           aria-label="Microscope analyzing oral tissue sequence"
         />
 
-        {/* Vignette overlay */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(5,5,5,0.4)_100%)]" />
+        {/* Darkening overlay for readability */}
+        <div className="pointer-events-none absolute inset-0 bg-black/30" />
+
+        {/* Bottom gradient for text legibility */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+
+        {/* Radial vignette */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(5,5,5,0.5)_100%)]" />
 
         {/* Loading indicator */}
         {!allLoaded && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-background/80 backdrop-blur-sm">
-            <div className="h-1 w-48 overflow-hidden rounded-full bg-white/10">
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-background/90 backdrop-blur-md">
+            <div className="h-1 w-56 overflow-hidden rounded-full bg-white/10">
               <motion.div
                 className="h-full bg-primary"
                 initial={{ width: 0 }}
@@ -153,152 +229,89 @@ export function Hero() {
                 transition={{ duration: 0.2 }}
               />
             </div>
-            <p className="text-sm text-muted">
-              Loading sequence… {loadingProgress}%
+            <p className="text-sm tracking-wide text-muted">
+              Loading experience… {loadingProgress}%
             </p>
           </div>
         )}
 
-        {/* Scene text overlays */}
+        {/* Content overlays */}
         {allLoaded && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+          <div
+            ref={textContainerRef}
+            className="absolute inset-0 flex flex-col items-center justify-end pb-32 sm:pb-40 px-6"
+          >
             {scenes.map((scene, index) => (
-              <SceneText key={index} scene={scene} />
+              <div
+                key={index}
+                data-scene
+                data-start={scene.start}
+                data-end={scene.end}
+                className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-32 sm:pb-40 px-6 text-center"
+                style={{ opacity: index === 0 ? 1 : 0 }}
+              >
+                <div className="max-w-5xl">
+                  <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-primary/90">
+                    {scene.eyebrow}
+                  </p>
+                  <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl [text-shadow:0_4px_30px_rgba(0,0,0,0.5)]">
+                    {scene.title}
+                  </h2>
+                  <p className="mt-5 max-w-2xl mx-auto text-lg text-white/85 sm:text-xl md:text-2xl [text-shadow:0_2px_20px_rgba(0,0,0,0.5)]">
+                    {scene.subtitle}
+                  </p>
+                </div>
+              </div>
             ))}
 
             {/* End state */}
-            <EndState />
+            <div
+              data-scene
+              data-start={0.88}
+              data-end={1}
+              className="pointer-events-auto absolute inset-0 flex flex-col items-center justify-end pb-32 sm:pb-40 px-6 text-center"
+              style={{ opacity: 0 }}
+            >
+              <div className="max-w-4xl">
+                <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-primary/90">
+                  OralPath
+                </p>
+                <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl [text-shadow:0_4px_30px_rgba(0,0,0,0.5)]">
+                  The AI Assistant Built
+                  <br />
+                  For Oral Pathology.
+                </h1>
+                <div className="mt-8 flex flex-col gap-4 justify-center sm:flex-row">
+                  <Button href="#beta">Join Beta</Button>
+                  <Button variant="outline" href="#features">
+                    Explore Features
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Scroll hint */}
+            <motion.div
+              data-scroll-hint
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1, duration: 1 }}
+              className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/50"
+            >
+              <span className="text-[10px] uppercase tracking-[0.2em]">Scroll</span>
+              <motion.div
+                animate={{ y: [0, 6, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <ChevronDown className="h-5 w-5" />
+              </motion.div>
+            </motion.div>
           </div>
         )}
       </div>
 
       {/* Scroll track */}
-      <div ref={trackRef} className="h-[450vh]" />
+      <div ref={trackRef} className="h-[500vh]" />
     </section>
-  );
-}
-
-function SceneText({
-  scene,
-}: {
-  scene: { start: number; end: number; title: string; subtitle: string };
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    if (prefersReducedMotion) {
-      ref.current.style.opacity = "0";
-      return;
-    }
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ref.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ref.current?.parentElement?.parentElement?.parentElement,
-            start: `${scene.start * 100}% top`,
-            end: `${(scene.start + 0.05) * 100}% top`,
-            scrub: true,
-          },
-        }
-      );
-
-      gsap.to(ref.current, {
-        opacity: 0,
-        y: -30,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ref.current?.parentElement?.parentElement?.parentElement,
-          start: `${(scene.end - 0.05) * 100}% top`,
-          end: `${scene.end * 100}% top`,
-          scrub: true,
-        },
-      });
-    });
-
-    return () => ctx.revert();
-  }, [scene]);
-
-  return (
-    <div
-      ref={ref}
-      className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-6 text-center"
-      style={{ opacity: 0 }}
-    >
-      <h2 className="max-w-4xl text-4xl font-semibold tracking-tight text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
-        {scene.title}
-      </h2>
-      <p className="mt-4 max-w-2xl text-lg text-white/80 drop-shadow-md sm:text-xl md:text-2xl">
-        {scene.subtitle}
-      </p>
-    </div>
-  );
-}
-
-function EndState() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    if (prefersReducedMotion) {
-      ref.current.style.opacity = "1";
-      return;
-    }
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ref.current,
-        { opacity: 0, scale: 0.95 },
-        {
-          opacity: 1,
-          scale: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ref.current?.parentElement?.parentElement?.parentElement,
-            start: "80% top",
-            end: "90% top",
-            scrub: true,
-          },
-        }
-      );
-    });
-
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className="pointer-events-auto absolute inset-0 flex flex-col items-center justify-center px-6 text-center"
-      style={{ opacity: 0 }}
-    >
-      <h1 className="max-w-4xl text-4xl font-semibold tracking-tight text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
-        The AI Assistant Built
-        <br />
-        For Oral Pathology.
-      </h1>
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-        <Button href="#beta">Join Beta</Button>
-        <Button variant="outline" href="#demo">
-          Watch Demo
-        </Button>
-      </div>
-    </div>
   );
 }

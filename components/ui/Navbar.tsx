@@ -27,16 +27,16 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed left-4 right-4 top-4 z-50 transition-all duration-300 sm:left-6 sm:right-6 lg:left-8 lg:right-8 ${
+      className={`fixed left-4 right-4 top-4 z-50 transition-all duration-500 sm:left-6 sm:right-6 lg:left-8 lg:right-8 ${
         scrolled
-          ? "rounded-2xl border border-white/[0.08] bg-black/60 backdrop-blur-xl"
+          ? "rounded-2xl border border-white/[0.08] bg-black/70 backdrop-blur-xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.5)]"
           : "bg-transparent"
       }`}
     >
       <Container>
         <nav className="flex h-16 items-center justify-between">
-          <a href="#" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
+          <a href="#" className="group flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 ring-1 ring-primary/20 transition-colors group-hover:bg-primary/25">
               <Microscope className="h-5 w-5 text-primary" />
             </div>
             <span className="text-lg font-semibold text-white">OralPath</span>
@@ -47,9 +47,10 @@ export function Navbar() {
               <a
                 key={link.label}
                 href={link.href}
-                className="text-sm text-muted transition-colors duration-200 hover:text-white"
+                className="relative text-sm text-muted transition-colors duration-200 hover:text-white"
               >
                 {link.label}
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-primary transition-all duration-300 hover:w-full" />
               </a>
             ))}
           </div>
@@ -62,7 +63,7 @@ export function Navbar() {
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex h-10 w-10 items-center justify-center rounded-lg text-white md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/[0.06] md:hidden"
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

@@ -19,28 +19,28 @@ const contact = [
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-white/[0.08] py-16">
+    <footer className="relative border-t border-white/[0.08] bg-white/[0.01] py-16 sm:py-20">
       <Container>
         <div className="grid gap-12 md:grid-cols-3">
           {/* Left */}
           <div>
             <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 ring-1 ring-primary/20">
                 <Microscope className="h-5 w-5 text-primary" />
               </div>
               <span className="text-lg font-semibold text-white">OralPath</span>
             </div>
-            <p className="mt-4 max-w-xs text-sm text-muted">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">
               AI-Powered Oral Histopathology Analysis
             </p>
           </div>
 
           {/* Center */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white/60">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.15em] text-white/40">
               Navigation
             </h4>
-            <ul className="mt-4 space-y-3">
+            <ul className="mt-5 space-y-3">
               {navigation.map((item) => (
                 <li key={item.label}>
                   <a
@@ -56,10 +56,10 @@ export function Footer() {
 
           {/* Right */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white/60">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.15em] text-white/40">
               Contact
             </h4>
-            <ul className="mt-4 space-y-3">
+            <ul className="mt-5 space-y-3">
               {contact.map((item) => (
                 <li key={item.label}>
                   <a
@@ -75,7 +75,7 @@ export function Footer() {
         </div>
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/[0.06] pt-8 sm:flex-row">
-          <p className="text-sm text-white/40">
+          <p className="text-sm text-white/35">
             © 2026 OralPath. Built for oral pathology research and education.
           </p>
         </div>

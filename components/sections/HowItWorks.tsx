@@ -42,13 +42,21 @@ const itemVariants = {
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative py-24 sm:py-32">
+    <section id="how-it-works" className="relative py-32 sm:py-40">
       <Container>
         <div className="mx-auto max-w-3xl text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-primary"
+          >
+            How It Works
+          </motion.p>
           <SectionHeading>
             Simple Workflow.
             <br />
-            Powerful Analysis.
+            <span className="text-white/40">Powerful Analysis.</span>
           </SectionHeading>
         </div>
 
@@ -57,21 +65,21 @@ export function HowItWorks() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="mt-16 grid gap-6 md:grid-cols-3"
+          className="mt-20 grid gap-6 md:grid-cols-3"
         >
           {steps.map((step, index) => (
             <motion.div key={step.title} variants={itemVariants}>
-              <GlassCard hover className="relative h-full p-8">
-                <div className="absolute -top-4 left-8 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white">
+              <GlassCard hover glow={index === 1 ? "secondary" : "none"} className="relative h-full p-8 sm:p-10">
+                <div className="absolute -top-4 left-8 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white shadow-lg shadow-primary/20">
                   {index + 1}
                 </div>
-                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
+                <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
                   <step.icon className="h-7 w-7 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold text-white">
+                <h3 className="text-2xl font-semibold text-white">
                   {step.title}
                 </h3>
-                <p className="mt-3 text-muted">{step.description}</p>
+                <p className="mt-4 text-muted leading-relaxed">{step.description}</p>
               </GlassCard>
             </motion.div>
           ))}

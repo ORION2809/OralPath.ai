@@ -10,19 +10,22 @@ const screens = [
     title: "Capture",
     feature: "Real-time image quality detection.",
     icon: ScanLine,
-    color: "from-primary/20 to-primary/5",
+    gradient: "from-primary/20 via-primary/5 to-transparent",
+    accent: "primary",
   },
   {
     title: "Analyze",
     feature: "AI-powered tissue classification.",
     icon: Sparkles,
-    color: "from-secondary/20 to-secondary/5",
+    gradient: "from-secondary/20 via-secondary/5 to-transparent",
+    accent: "secondary",
   },
   {
     title: "Results",
     feature: "Confidence scores, probability distributions, clinical observations.",
     icon: ListChecks,
-    color: "from-primary/20 to-secondary/5",
+    gradient: "from-primary/15 via-secondary/10 to-transparent",
+    accent: "primary",
   },
 ];
 
@@ -33,21 +36,23 @@ function PhoneMockup({
   screen: (typeof screens)[0];
   index: number;
 }) {
+  const accentColor = screen.accent === "primary" ? "#14B8A6" : "#60A5FA";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.7, delay: index * 0.15 }}
+      transition={{ duration: 0.8, delay: index * 0.15 }}
       className="flex flex-col items-center"
     >
-      <div className="relative w-[260px] overflow-hidden rounded-[2.5rem] border-[6px] border-white/10 bg-background p-3 shadow-2xl shadow-black/50">
+      <div className="relative w-[260px] overflow-hidden rounded-[2.5rem] border-[6px] border-white/[0.08] bg-[#0a0a0a] p-3 shadow-2xl shadow-black/60 transition-transform duration-500 hover:scale-[1.02]">
         {/* Notch */}
         <div className="absolute left-1/2 top-3 z-10 h-6 w-24 -translate-x-1/2 rounded-full bg-black" />
 
         {/* Screen */}
         <div
-          className={`relative aspect-[9/19] overflow-hidden rounded-[2rem] bg-gradient-to-b ${screen.color} p-5 pt-10`}
+          className={`relative aspect-[9/19] overflow-hidden rounded-[2rem] bg-gradient-to-b ${screen.gradient} p-5 pt-10`}
         >
           {/* Status bar */}
           <div className="flex items-center justify-between text-[10px] text-white/80">
@@ -62,8 +67,11 @@ function PhoneMockup({
           {/* App content */}
           <div className="mt-6 space-y-4">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/20">
-                <screen.icon className="h-4 w-4 text-primary" />
+              <div
+                className="flex h-8 w-8 items-center justify-center rounded-lg"
+                style={{ backgroundColor: `${accentColor}20` }}
+              >
+                <screen.icon className="h-4 w-4" style={{ color: accentColor }} />
               </div>
               <span className="text-sm font-medium text-white">
                 {screen.title}
@@ -72,12 +80,12 @@ function PhoneMockup({
 
             {index === 0 && (
               <div className="aspect-square rounded-2xl border-2 border-dashed border-white/20 bg-white/5 p-4">
-                <div className="flex h-full items-center justify-center">
+                <div className="flex h-full flex-col items-center justify-center">
                   <ScanLine className="h-12 w-12 text-primary/60" />
+                  <p className="mt-3 text-center text-xs text-white/60">
+                    Align tissue in frame
+                  </p>
                 </div>
-                <p className="mt-2 text-center text-xs text-white/60">
-                  Align tissue in frame
-                </p>
               </div>
             )}
 
@@ -120,8 +128,8 @@ function PhoneMockup({
         </div>
       </div>
 
-      <div className="mt-6 max-w-[260px] text-center">
-        <h3 className="text-lg font-semibold text-white">{screen.title}</h3>
+      <div className="mt-8 max-w-[280px] text-center">
+        <h3 className="text-xl font-semibold text-white">{screen.title}</h3>
         <p className="mt-2 text-sm text-muted">{screen.feature}</p>
       </div>
     </motion.div>
@@ -132,21 +140,37 @@ export function MobileShowcase() {
   return (
     <section
       id="features"
-      className="relative overflow-hidden py-24 sm:py-32"
+      className="relative overflow-hidden py-32 sm:py-40"
     >
       {/* Background glow */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[120px]" />
 
       <Container className="relative">
         <div className="mx-auto max-w-3xl text-center">
-          <SectionHeading>The OralPath Experience</SectionHeading>
-          <p className="mt-6 text-lg text-muted">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-primary"
+          >
+            Product
+          </motion.p>
+          <SectionHeading>
+            The OralPath Experience
+          </SectionHeading>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="mt-6 text-lg text-muted"
+          >
             A focused mobile interface designed for the microscope bench. Capture,
             analyze, and review results in one continuous flow.
-          </p>
+          </motion.p>
         </div>
 
-        <div className="mt-16 flex flex-col items-center justify-center gap-12 lg:flex-row lg:items-start">
+        <div className="mt-20 flex flex-col items-center justify-center gap-16 lg:flex-row lg:items-start">
           {screens.map((screen, index) => (
             <PhoneMockup key={screen.title} screen={screen} index={index} />
           ))}

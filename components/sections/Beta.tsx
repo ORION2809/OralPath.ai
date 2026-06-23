@@ -22,16 +22,35 @@ export function Beta() {
   };
 
   return (
-    <section id="beta" className="relative py-24 sm:py-32">
-      <Container>
+    <section id="beta" className="relative py-32 sm:py-40 overflow-hidden">
+      {/* Background glow */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[120px]" />
+
+      <Container className="relative">
         <div className="mx-auto max-w-3xl text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-primary"
+          >
+            Beta Access
+          </motion.p>
           <SectionHeading>
-            Help Shape The Future Of Oral Pathology AI
+            Help Shape The Future
+            <br />
+            <span className="text-white/40">Of Oral Pathology AI</span>
           </SectionHeading>
-          <p className="mt-6 text-lg text-muted">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="mt-6 text-lg text-muted"
+          >
             Join the beta program and be among the first to use OralPath in your
             research or clinical workflow.
-          </p>
+          </motion.p>
         </div>
 
         <motion.div
@@ -41,10 +60,10 @@ export function Beta() {
           transition={{ duration: 0.6 }}
           className="mx-auto mt-16 max-w-xl"
         >
-          <GlassCard className="p-8 sm:p-10">
+          <GlassCard glow="primary" className="p-8 sm:p-10">
             {submitted ? (
               <div className="py-12 text-center">
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/15">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 ring-1 ring-primary/30">
                   <svg
                     className="h-7 w-7 text-primary"
                     fill="none"
@@ -71,7 +90,7 @@ export function Beta() {
                 <div>
                   <label
                     htmlFor="name"
-                    className="mb-2 block text-sm font-medium text-white"
+                    className="mb-2 block text-sm font-medium text-white/90"
                   >
                     Name
                   </label>
@@ -83,14 +102,14 @@ export function Beta() {
                     onChange={(e) =>
                       setFormState({ ...formState, name: e.target.value })
                     }
-                    className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-white placeholder:text-white/30 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50"
+                    className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-white placeholder:text-white/25 transition-colors focus:border-primary/50 focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-primary/50"
                     placeholder="Dr. Jane Smith"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="email"
-                    className="mb-2 block text-sm font-medium text-white"
+                    className="mb-2 block text-sm font-medium text-white/90"
                   >
                     Email
                   </label>
@@ -102,14 +121,14 @@ export function Beta() {
                     onChange={(e) =>
                       setFormState({ ...formState, email: e.target.value })
                     }
-                    className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-white placeholder:text-white/30 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50"
+                    className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-white placeholder:text-white/25 transition-colors focus:border-primary/50 focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-primary/50"
                     placeholder="jane@university.edu"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="institution"
-                    className="mb-2 block text-sm font-medium text-white"
+                    className="mb-2 block text-sm font-medium text-white/90"
                   >
                     Institution
                   </label>
@@ -124,14 +143,14 @@ export function Beta() {
                         institution: e.target.value,
                       })
                     }
-                    className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-white placeholder:text-white/30 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50"
+                    className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-white placeholder:text-white/25 transition-colors focus:border-primary/50 focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-primary/50"
                     placeholder="University Medical Center"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="role"
-                    className="mb-2 block text-sm font-medium text-white"
+                    className="mb-2 block text-sm font-medium text-white/90"
                   >
                     Role
                   </label>
@@ -142,7 +161,7 @@ export function Beta() {
                     onChange={(e) =>
                       setFormState({ ...formState, role: e.target.value })
                     }
-                    className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-white focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50 [&>option]:bg-background"
+                    className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-white transition-colors focus:border-primary/50 focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-primary/50 [&>option]:bg-background"
                   >
                     <option value="" disabled>
                       Select your role

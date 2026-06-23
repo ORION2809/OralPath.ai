@@ -41,11 +41,24 @@ const itemVariants = {
 
 export function WhyOralPath() {
   return (
-    <section className="relative py-24 sm:py-32">
-      <Container>
+    <section className="relative py-32 sm:py-40 overflow-hidden">
+      {/* Background glow */}
+      <div className="pointer-events-none absolute right-0 top-0 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[120px]" />
+
+      <Container className="relative">
         <div className="mx-auto max-w-3xl text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-primary"
+          >
+            Why OralPath
+          </motion.p>
           <SectionHeading>
-            Designed For Modern Oral Pathology
+            Designed For
+            <br />
+            <span className="text-white/40">Modern Oral Pathology</span>
           </SectionHeading>
         </div>
 
@@ -54,18 +67,18 @@ export function WhyOralPath() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="mt-16 grid gap-6 md:grid-cols-3"
+          className="mt-20 grid gap-6 md:grid-cols-3"
         >
-          {features.map((feature) => (
+          {features.map((feature, index) => (
             <motion.div key={feature.title} variants={itemVariants}>
-              <GlassCard hover className="h-full p-8 text-center">
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+              <GlassCard hover glow={index === 0 ? "primary" : index === 1 ? "secondary" : "none"} className="h-full p-8 sm:p-10 text-center">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
                   <feature.icon className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold text-white">
+                <h3 className="text-2xl font-semibold text-white">
                   {feature.title}
                 </h3>
-                <p className="mt-3 text-muted">{feature.description}</p>
+                <p className="mt-4 text-muted leading-relaxed">{feature.description}</p>
               </GlassCard>
             </motion.div>
           ))}
