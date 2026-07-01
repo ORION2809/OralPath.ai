@@ -19,7 +19,12 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    if (prefersReducedMotion) {
+    const isMobile = window.innerWidth < 768;
+
+    ScrollTrigger.normalizeScroll(true);
+
+    if (prefersReducedMotion || isMobile) {
+      ScrollTrigger.refresh();
       return;
     }
 
@@ -30,6 +35,7 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       gestureOrientation: "vertical",
       smoothWheel: true,
       touchMultiplier: 2,
+      wheelMultiplier: 1,
     });
 
     lenisRef.current = lenis;

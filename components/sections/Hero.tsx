@@ -240,7 +240,7 @@ export function Hero() {
         {allLoaded && (
           <div
             ref={textContainerRef}
-            className="absolute inset-0 flex flex-col items-center justify-end pb-32 sm:pb-40 px-6"
+            className="absolute inset-0 flex flex-col items-center justify-end pb-24 sm:pb-40 px-4 sm:px-6"
           >
             {scenes.map((scene, index) => (
               <div
@@ -248,17 +248,17 @@ export function Hero() {
                 data-scene
                 data-start={scene.start}
                 data-end={scene.end}
-                className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-32 sm:pb-40 px-6 text-center"
+                className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-24 sm:pb-40 px-4 sm:px-6 text-center"
                 style={{ opacity: index === 0 ? 1 : 0 }}
               >
-                <div className="max-w-5xl">
-                  <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-primary/90">
+                <div className="w-full max-w-5xl">
+                  <p className="mb-3 sm:mb-4 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] text-primary/90">
                     {scene.eyebrow}
                   </p>
-                  <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl [text-shadow:0_4px_30px_rgba(0,0,0,0.5)]">
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl font-semibold tracking-tight text-white [text-shadow:0_4px_30px_rgba(0,0,0,0.5)]">
                     {scene.title}
                   </h2>
-                  <p className="mt-5 max-w-2xl mx-auto text-lg text-white/85 sm:text-xl md:text-2xl [text-shadow:0_2px_20px_rgba(0,0,0,0.5)]">
+                  <p className="mt-3 sm:mt-5 max-w-2xl mx-auto text-base sm:text-lg md:text-xl lg:text-2xl text-white/85 [text-shadow:0_2px_20px_rgba(0,0,0,0.5)]">
                     {scene.subtitle}
                   </p>
                 </div>
@@ -270,19 +270,19 @@ export function Hero() {
               data-scene
               data-start={0.88}
               data-end={1}
-              className="pointer-events-auto absolute inset-0 flex flex-col items-center justify-end pb-32 sm:pb-40 px-6 text-center"
+              className="pointer-events-auto absolute inset-0 flex flex-col items-center justify-end pb-24 sm:pb-40 px-4 sm:px-6 text-center"
               style={{ opacity: 0 }}
             >
-              <div className="max-w-4xl">
-                <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-primary/90">
+              <div className="w-full max-w-4xl">
+                <p className="mb-3 sm:mb-4 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] text-primary/90">
                   OralPath
                 </p>
-                <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl [text-shadow:0_4px_30px_rgba(0,0,0,0.5)]">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl font-semibold tracking-tight text-white [text-shadow:0_4px_30px_rgba(0,0,0,0.5)]">
                   The AI Assistant Built
                   <br />
                   For Oral Pathology.
                 </h1>
-                <div className="mt-8 flex flex-col gap-4 justify-center sm:flex-row">
+                <div className="mt-6 sm:mt-8 flex flex-col gap-3 sm:gap-4 justify-center sm:flex-row">
                   <Button href="#beta">Join Beta</Button>
                   <Button variant="outline" href="#features">
                     Explore Features
